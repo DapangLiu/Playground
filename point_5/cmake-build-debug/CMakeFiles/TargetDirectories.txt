@@ -1,0 +1,3 @@
+C:/Users/COSIT/Dropbox/Codes/C/point_5/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/COSIT/Dropbox/Codes/C/point_5/cmake-build-debug/CMakeFiles/point_5.dir
+C:/Users/COSIT/Dropbox/Codes/C/point_5/cmake-build-debug/CMakeFiles/edit_cache.dir
