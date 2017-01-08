@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <stdbool.h>
 
 typedef struct Node {
 
@@ -8,19 +9,64 @@ typedef struct Node {
 
 } NODE, * pNODE;
 
+
+// Declare
 pNODE create_list();
 
 void traverse_list(pNODE pNode);
 
+bool is_empty(pNODE pHead);
+
+int length_list(pNODE pHead);
+
+bool insert_list(pNODE pHead, int pos, int val);
+
+bool delete_list(pNODE pHead, int pos, int * pVal);
+
+void sort_list(pNODE pHead, int length);
+
+// Main
 int main() {
+
+    int length = 0;
+
+    int delete_val;
 
     pNODE pHead = NULL;
 
     // create the list
     pHead = create_list();
 
+    if (is_empty(pHead)) {
+        printf("the list is empty!");
+    } else {
+        // traverse the list
+        traverse_list(pHead);
+    }
+
+
+    // show the length of the list
+    length = length_list(pHead);
+    printf("The length of the list is %d. \n", length);
+
+    // sor the list
+    sort_list(pHead, length);
+
     // traverse the list
     traverse_list(pHead);
+
+    // insert
+    insert_list(pHead, 3, 22);
+
+    // traverse the list
+    traverse_list(pHead);
+
+    // delete
+    if (delete_list(pHead, 3, &delete_val)) {
+        printf("delete seccess!\n");
+    } else {
+        printf("delete fails!\n");
+    }
 
     return 0;
 }
@@ -85,5 +131,118 @@ pNODE create_list(void) {
     }
 
     return pHead;
+
+}
+
+
+
+bool is_empty(pNODE pHead) {
+
+    if(pHead->pNext == NULL) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+int length_list(pNODE pHead) {
+
+    int cnt = 0;
+    pNODE pNode = pHead->pNext; // pNode always equals to pNext
+
+    // do the condition check at beginning
+    while (NULL != pNode) {
+        ++cnt;
+        pNode = pNode->pNext; // assign the pNode to the next node
+    }
+    return cnt;
+}
+
+// before the pos
+bool insert_list(pNODE pHead, int pos, int val) {
+
+    int i = 0;
+    pNODE p = pHead;
+
+    // Below two condition validation is counter each other
+    while (NULL!=p && i<pos-1) {
+
+        p = p->pNext; // point to
+        ++i;
+    }
+
+    if (i>pos-1 || NULL == p) {
+
+        return false;
+    }
+
+    pNODE  pNew = (pNODE) malloc(sizeof(NODE));
+
+    if(NULL == pNew) {
+
+        printf("malloc fails!");
+        exit(-1);
+    }
+
+    pNew->data = val;
+    pNODE q = p->pNext; // temp storage
+    p->pNext = pNew;
+    pNew->pNext = q;
+
+    return true;
+
+}
+
+
+void sort_list(pNODE pHead, int length) {
+
+    int i,j,t;
+    pNODE p,q;
+
+
+    for (i=0,p=pHead->pNext; i<length-1; ++i, p=p->pNext) {
+
+
+        for (j=i+1,q=p->pNext;j<length;++j,q=q->pNext) {
+             if (p->data >q->data) {
+
+
+                 t = p->data;
+                 p->data = q->data;
+                 q->data = t;
+             }
+        }
+    }
+
+    return;
+}
+
+bool delete_list(pNODE pHead, int pos, int * pVal) {
+
+
+    int i = 0;
+    pNODE p = pHead;
+
+    // Below two condition validation is counter each other
+    while (NULL!=p->pNext && i<pos-1) {
+
+        p = p->pNext; // point to
+        ++i;
+    }
+
+    if (i>pos-1 || NULL == p) {
+
+        return false;
+    }
+
+    // store the original data and pointer
+    pNODE q = p->pNext;
+    * pVal = q->data;
+
+    p->pNext = p->pNext->pNext;
+    free(q);
+    q = NULL;
+
+    return true;
 
 }
